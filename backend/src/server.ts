@@ -21,10 +21,12 @@ const fastify = Fastify({
 const start = async () => {
   try {
     // 1. CORS
+    const origins = process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : ['*'];
     await fastify.register(cors, {
-      origin: '*', 
-      credentials: false,
+      origin: origins, 
+      credentials: true,
       allowedHeaders: ['Content-Type', 'Authorization', 'ngrok-skip-browser-warning'],
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS']
     });
 
     // 2. ERROR HANDLER
