@@ -31,7 +31,12 @@ const Login: React.FC = () => {
       }
       navigate('/');
     } catch (error: any) {
-      toast.error(error.message || 'Erro ao autenticar');
+      console.error('[Login] Submission error:', error);
+      if (error.response) {
+        console.error('[Login] Response data:', error.response.data);
+        console.error('[Login] Response status:', error.response.status);
+      }
+      toast.error(error.response?.data?.error || error.message || 'Erro ao autenticar');
     }
   };
 

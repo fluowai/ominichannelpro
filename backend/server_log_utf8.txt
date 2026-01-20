@@ -1,0 +1,26 @@
+﻿
+> fluow-ai-backend@1.0.0 dev
+> tsx watch src/server.ts
+
+[CONN_MANAGER] ­ƒƒó INSTANCE CREATED
+[ROUTES] Integration routes registered
+{"level":30,"time":1768941893910,"pid":26312,"hostname":"PauloArgolo","msg":"Server listening at http://127.0.0.1:3333"}
+­ƒÜÇ Server running at http://localhost:3333
+{"level":30,"time":1768941893910,"pid":26312,"hostname":"PauloArgolo","msg":"Server listening at http://192.168.15.4:3333"}
+[InstagramService] Starting Workers...
+[InstagramService] Workers initialized: Posts, Welcome, DM Sync
+[SERVICES] Instagram Workers Started
+[InstagramWorker] Verificando novos seguidores para boas-vindas...
+[InstagramWorker] Starting DM synchronization...
+prisma:query BEGIN
+prisma:query DEALLOCATE ALL
+prisma:query SELECT "public"."InstagramAccount"."id", "public"."InstagramAccount"."username", "public"."InstagramAccount"."password", "public"."InstagramAccount"."sessionData", "public"."InstagramAccount"."status"::text, "public"."InstagramAccount"."isActive", "public"."InstagramAccount"."organizationId", "public"."InstagramAccount"."createdAt", "public"."InstagramAccount"."updatedAt" FROM "public"."InstagramAccount" WHERE ("public"."InstagramAccount"."status" = CAST($1::text AS "public"."IntegrationStatus") AND "public"."InstagramAccount"."isActive" = $2) OFFSET $3
+prisma:query COMMIT
+prisma:query BEGIN
+prisma:query DEALLOCATE ALL
+prisma:query BEGIN
+prisma:query DEALLOCATE ALL
+prisma:query SELECT "public"."InstagramPost"."id", "public"."InstagramPost"."type"::text, "public"."InstagramPost"."mediaUrls", "public"."InstagramPost"."caption", "public"."InstagramPost"."scheduledAt", "public"."InstagramPost"."publishedAt", "public"."InstagramPost"."status"::text, "public"."InstagramPost"."error", "public"."InstagramPost"."instagramAccountId", "public"."InstagramPost"."createdAt", "public"."InstagramPost"."updatedAt" FROM "public"."InstagramPost" WHERE ("public"."InstagramPost"."scheduledAt" <= $1 AND "public"."InstagramPost"."status" = CAST($2::text AS "public"."CampaignStatus")) OFFSET $3
+prisma:query COMMIT
+prisma:query SELECT "public"."InstagramAccount"."id", "public"."InstagramAccount"."username", "public"."InstagramAccount"."password", "public"."InstagramAccount"."sessionData", "public"."InstagramAccount"."status"::text, "public"."InstagramAccount"."isActive", "public"."InstagramAccount"."organizationId", "public"."InstagramAccount"."createdAt", "public"."InstagramAccount"."updatedAt" FROM "public"."InstagramAccount" WHERE ("public"."InstagramAccount"."status" = CAST($1::text AS "public"."IntegrationStatus") AND "public"."InstagramAccount"."isActive" = $2) OFFSET $3
+prisma:query COMMIT

@@ -34,11 +34,7 @@ api.interceptors.request.use(
     }
     
     // Log all requests for debugging
-    if (config.url?.includes('integrations') && config.url?.includes('connect')) {
-      console.log('[API] Making request:', config.method?.toUpperCase(), config.url);
-      console.log('[API] Full URL:', config.baseURL + config.url);
-      console.log('[API] Headers:', config.headers);
-    }
+    console.log(`[API] ${config.method?.toUpperCase()} ${config.url}`);
     
     return config;
   },
@@ -122,6 +118,7 @@ api.interceptors.response.use(
       }
     }
 
+    console.error('[API Error]', error.response?.status, error.response?.data || error.message);
     return Promise.reject(error);
   }
 );
