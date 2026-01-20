@@ -31,16 +31,18 @@ export async function authRoutes(fastify: FastifyInstance) {
 
       // Create user
       const hashedPassword = await hashPassword(password);
+      
       // Check if this is the first user
       const userCount = await prisma.user.count();
       const role = userCount === 0 ? 'SUPER_ADMIN' : 'AGENT';
 
-      // ✅ CRITICAL FIX: Always create organization for new users
+      // ✅ Always create organization for new users
       const orgSlug = email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g, '-') + '-' + Date.now();
       const organization = await prisma.organization.create({
         data: {
           name: `${name}'s Organization`,
-          slug: orgSlug
+          slug: orgSlug,
+          plan: role === 'SUPER_ADMIN' ? 'ENTERPRISE' : 'FREE'
         }
       });
 
@@ -50,7 +52,7 @@ export async function authRoutes(fastify: FastifyInstance) {
           password: hashedPassword,
           name,
           role,
-          organizationId: organization.id, // ✅ Link organization immediately
+          organizationId: organization.id,
         },
         select: {
           id: true,
