@@ -60,7 +60,8 @@ api.interceptors.request.use(
     }
     
     // Log all requests for debugging
-    console.log(`[API] ${config.method?.toUpperCase()} ${config.url}`);
+    const fullUrl = config.baseURL ? `${config.baseURL}${config.url}` : config.url;
+    console.log(`[API Request] ${config.method?.toUpperCase()} ${fullUrl}`);
     
     return config;
   },
