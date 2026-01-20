@@ -1,0 +1,36 @@
+﻿Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+node.exe : Error: 
+No C:\Program Files\no
+dejs\npx.ps1:29 
+caractere:3
++   & $NODE_EXE 
+$NPX_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~
+    + CategoryInfo    
+          : NotSpeci  
+  fied: (Error: :St   
+ ring) [], RemoteE    
+xception
+    + FullyQualifiedE 
+   rrorId : NativeCo  
+  mmandError
+ 
+EPERM: operation not 
+permitted, rename 'C:\
+Users\paulo\OneDrive\├
+ürea de 
+Trabalho\FLUOW AI2026\
+backend\node_modules\.
+prisma\client\query_en
+gine-windows.dll.node.
+tmp25532' -> 'C:\Users
+\paulo\OneDrive\├ürea 
+de Trabalho\FLUOW AI20
+26\backend\node_module
+s\.prisma\client\query
+_engine-windows.dll.no
+de'
+
+
