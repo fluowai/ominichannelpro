@@ -1,0 +1,16 @@
+{
+  "id": "cmkixp81f0001pudadt0e9zco",
+  "name": "oi9000",
+  "type": "WUZAPI",
+  "status": "DISCONNECTED",
+  "apiKey": null,
+  "instanceUrl": "https://wooapi.boow.com.br",
+  "config": {
+    "sessionId": "oi9000",
+    "userToken": "24897f7f01a3b1d0f0e1f0fc02a58587"
+  },
+  "agentId": null,
+  "createdAt": "2026-01-17T23:24:12.147Z",
+  "updatedAt": "2026-01-17T23:24:12.147Z",
+  "organizationId": null
+}

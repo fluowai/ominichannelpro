@@ -1,0 +1,76 @@
+# Dependencies
+node_modules
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+
+# Production
+/dist
+/build
+
+# Misc
+.DS_Store
+*.pem
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Local env files
+.env
+.env*.local
+
+# Logs
+*.log
+backend/*.log
+backend/evolution_debug.log
+backend/debug_evolution_log.txt
+backend/server_requests.log
+backend/webhook_*.log
+backend/wuzapi_*.log
+backend/singleton_debug.log
+backend/probe.log
+
+# Temporary and Debug files
+backend/debug_*.txt
+backend/test_*.txt
+backend/*out.txt
+backend/*out_v2.txt
+backend/*dump.txt
+backend/*result.json
+backend/*check_result.json
+backend/target_integration.json
+backend/target_integration_utf8.json
+backend/new_int_check.json
+backend/test_newsletter.json
+backend/current_wuzapi_users*.json
+backend/users_full_list*.json
+backend/wuzapi_users_list*.json
+backend/all_settings_v2.json
+backend/check_int_oi9000_out.json
+backend/create_oi9000_result.json
+backend/create_pauloa_result.json
+backend/create_user_result.json
+backend/debug_full_contacts.json
+backend/debug_conversations.json
+backend/wuzapi_db_debug_utf8.json
+backend/wuzapi_summary.json
+backend/tunnels.json
+backend/wuzapi_settings.json
+backend/wuzapi_qr_response.json
+
+# Large files
+backend/cnn_context.txt
+backend/raw_wuzapi.log
+
+# Internal/IDE
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.sln
+*.sw?

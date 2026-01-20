@@ -1,0 +1,413 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Organization {
+  id           String   @id @default(cuid())
+  name         String
+  slug         String   @unique
+  plan         String   @default("FREE")
+  isActive     Boolean  @default(true)
+  maxAgents    Int      @default(5)
+  maxUsers     Int      @default(3)
+  maxWhatsapps Int      @default(1)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  agents       Agent[]
+  users        User[]
+  integrations Integration[]
+  properties    Property[]
+  contactLists  ContactList[]
+  kanbanColumns KanbanColumn[]
+  instagramAccounts InstagramAccount[]
+
+  @@map("Organization")
+}
+
+model User {
+  id               String         @id @default(cuid())
+  email            String         @unique
+  name             String
+  password         String
+  role             UserRole       @default(AGENT)
+  avatar           String?
+  bio              String?
+  twoFactorEnabled Boolean        @default(false)
+  twoFactorSecret  String?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  organizationId   String?
+  agents           Agent[]
+  campaigns        Campaign[]
+  conversations    Conversation[]
+  messages         Message[]
+  refreshTokens    RefreshToken[]
+  organization     Organization?  @relation(fields: [organizationId], references: [id])
+
+  @@map("User")
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("RefreshToken")
+}
+
+model Agent {
+  id             String         @id @default(cuid())
+  name           String
+  provider       AgentProvider
+  model          String
+  prompt         String
+  status         AgentStatus    @default(ACTIVE)
+  temperature    Float          @default(0.7)
+  maxTokens      Int            @default(1000)
+  ignoreGroups   Boolean        @default(true)
+  skills         String[]       @default([])
+  userId         String
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  organizationId String?
+  apiKey         String?
+  organization   Organization?  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversations  Conversation[]
+  integrations   Integration[]
+
+  @@map("Agent")
+}
+
+model Property {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  title       String
+  description String
+  price       Float
+  type        String   
+  city        String
+  bedrooms    Int
+  bathrooms   Int
+  area        Float
+  status      String   @default("AVAILABLE") 
+  images      String[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@map("Property")
+}
+
+model Contact {
+  id            String         @id @default(cuid())
+  name          String
+  phone         String?
+  email         String?
+  avatar        String?
+  platform      Platform
+  platformId    String
+  tags          String[]       @default([])
+  customFields  Json?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  conversations Conversation[]
+  lists         ContactList[]
+  kanbanCards   KanbanCard[]
+
+  @@unique([platform, platformId])
+  @@map("Contact")
+}
+
+
+model Conversation {
+  id           String             @id @default(cuid())
+  contactId    String
+  agentId      String?
+  assignedToId String?
+  platform     Platform
+  status       ConversationStatus @default(OPEN)
+  unreadCount  Int                @default(0)
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  agent        Agent?             @relation(fields: [agentId], references: [id])
+  integrationId String?           // Added for instance filtering
+  integration  Integration?       @relation(fields: [integrationId], references: [id])
+  assignedTo   User?              @relation(fields: [assignedToId], references: [id])
+  contact      Contact            @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  messages     Message[]
+
+  @@map("Conversation")
+}
+
+model Message {
+  id             String        @id @default(cuid())
+  conversationId String
+  text           String
+  sender         MessageSender
+  userId         String?
+  attachments    Json?
+  metadata       Json?
+  
+  // Media Support
+  mediaType      String?      // 'image', 'audio', 'video', 'document', 'voice', 'sticker'
+  mediaUrl       String?      // URL or local path to media file
+  mediaFilename  String?      // Original filename
+  mediaSize      Int?         // File size in bytes
+  mediaMimeType  String?      // MIME type (image/jpeg, audio/ogg, etc)
+  thumbnailUrl   String?      // Thumbnail for videos/documents
+  
+  createdAt      DateTime      @default(now())
+  conversation   Conversation  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user           User?         @relation(fields: [userId], references: [id])
+
+  @@map("Message")
+}
+
+model Integration {
+  id          String            @id @default(cuid())
+  name        String
+  type        IntegrationType
+  status      IntegrationStatus @default(DISCONNECTED)
+  apiKey      String?
+  instanceUrl String?
+  instanceName String?          // Nome da instância na Evolution API
+  webhookUrl   String?          // URL do webhook configurado
+  config      Json?
+  agentId     String?
+  agent       Agent?            @relation(fields: [agentId], references: [id])
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  organizationId String?
+  organization   Organization?     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  conversations  Conversation[]
+
+  @@map("Integration")
+}
+
+model Campaign {
+  id             String         @id @default(cuid())
+  name           String
+  message        String
+  platform       Platform
+  status         CampaignStatus @default(DRAFT)
+  audience       String
+  contactIds     String[]
+  scheduledAt    DateTime?
+  completedAt    DateTime?
+  sentCount      Int            @default(0)
+  deliveredCount Int            @default(0)
+  readCount      Int            @default(0)
+  errorCount     Int            @default(0)
+  userId         String
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("Campaign")
+}
+
+model Template {
+  id        String   @id @default(cuid())
+  name      String
+  content   String
+  variables String[] @default([])
+  category  String
+  platform  Platform
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("Template")
+}
+
+model QuickReply {
+  id        String   @id @default(cuid())
+  shortcut  String   @unique
+  content   String
+  category  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("QuickReply")
+}
+
+model SystemSettings {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       Json
+  description String?
+  updatedAt   DateTime @updatedAt
+
+  @@map("SystemSettings")
+}
+
+model InstagramAccount {
+  id             String   @id @default(cuid())
+  username       String   @unique
+  password       String
+  sessionData    Json?    // Stores the session fingerprint/state
+  status         IntegrationStatus @default(DISCONNECTED)
+  isActive       Boolean  @default(true)
+  
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  posts          InstagramPost[]
+  followers      InstagramFollower[]
+
+  @@map("InstagramAccount")
+}
+
+model InstagramPost {
+  id             String   @id @default(cuid())
+  type           InstagramPostType @default(POST)
+  mediaUrls      String[]
+  caption        String?
+  scheduledAt    DateTime
+  publishedAt    DateTime?
+  status         CampaignStatus @default(SCHEDULED)
+  error          String?
+  
+  instagramAccountId String
+  instagramAccount   InstagramAccount @relation(fields: [instagramAccountId], references: [id], onDelete: Cascade)
+  
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("InstagramPost")
+}
+
+model InstagramFollower {
+  id             String   @id @default(cuid())
+  instagramId    String   // ID do seguidor no Instagram
+  username       String
+  welcomedAt     DateTime @default(now())
+  
+  instagramAccountId String
+  instagramAccount   InstagramAccount @relation(fields: [instagramAccountId], references: [id], onDelete: Cascade)
+
+  @@unique([instagramAccountId, instagramId])
+  @@map("InstagramFollower")
+}
+
+enum InstagramPostType {
+  POST
+  REEL
+  STORY
+}
+
+enum UserRole {
+  ADMIN
+  MANAGER
+  AGENT
+  SUPER_ADMIN
+}
+
+enum AgentProvider {
+  GEMINI
+  OPENAI
+  GROQ
+}
+
+enum AgentStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum Platform {
+  WHATSAPP
+  INSTAGRAM
+  MESSENGER
+}
+
+enum ConversationStatus {
+  OPEN
+  PENDING
+  RESOLVED
+  ARCHIVED
+}
+
+enum MessageSender {
+  USER
+  AGENT
+  SYSTEM
+}
+
+enum IntegrationType {
+  EVOLUTION_API
+  WUZAPI
+  INSTAGRAM_OFFICIAL
+  INSTAGRAM_UNOFFICIAL
+  WEBHOOK
+}
+
+enum IntegrationStatus {
+  CONNECTED
+  DISCONNECTED
+  ERROR
+}
+
+enum CampaignStatus {
+  DRAFT
+  SCHEDULED
+  SENDING
+  COMPLETED
+  FAILED
+}
+
+model ContactList {
+  id             String       @id @default(cuid())
+  name           String
+  description    String?
+  organizationId String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  contacts       Contact[]
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@map("ContactList")
+}
+
+model KanbanColumn {
+  id             String       @id @default(cuid())
+  title          String
+  order          Int
+  color          String       @default("#cbd5e1")
+  organizationId String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  cards          KanbanCard[]
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@map("KanbanColumn")
+}
+
+model KanbanCard {
+  id          String       @id @default(cuid())
+  title       String
+  description String?
+  value       Float?
+  order       Int
+  columnId    String
+  contactId   String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  column      KanbanColumn @relation(fields: [columnId], references: [id], onDelete: Cascade)
+  contact     Contact?     @relation(fields: [contactId], references: [id])
+
+  @@map("KanbanCard")
+}

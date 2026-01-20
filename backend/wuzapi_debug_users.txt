@@ -1,0 +1,24 @@
+Checking User: p1 | ID: cd6d7b8e90ca3f1c2688e6cee3a79445
+Attempt 1 (Name): p1 -> Connected: false
+Checking User: p1 | ID: cd6d7b8e90ca3f1c2688e6cee3a79445
+Attempt 1 (Name): p1 -> Connected: false
+Attempt 2 (ID): cd6d7b8e90ca3f1c2688e6cee3a79445 -> Connected: false
+Attempt 2 (ID): cd6d7b8e90ca3f1c2688e6cee3a79445 -> Connected: false
+Checking User: p1 | ID: cd6d7b8e90ca3f1c2688e6cee3a79445
+Attempt 1 (Name): p1 -> Connected: false
+Attempt 2 (ID): cd6d7b8e90ca3f1c2688e6cee3a79445 -> Connected: false
+Checking User: p1 | ID: cd6d7b8e90ca3f1c2688e6cee3a79445
+Attempt 1 (Name): p1 -> Connected: false
+Attempt 2 (ID): cd6d7b8e90ca3f1c2688e6cee3a79445 -> Connected: false
+Checking User: p1 | ID: cd6d7b8e90ca3f1c2688e6cee3a79445
+Attempt 1 (Name): p1 -> Connected: false
+Checking User: p1 | ID: cd6d7b8e90ca3f1c2688e6cee3a79445
+Attempt 1 (Name): p1 -> Connected: false
+Attempt 2 (ID): cd6d7b8e90ca3f1c2688e6cee3a79445 -> Connected: false
+Attempt 2 (ID): cd6d7b8e90ca3f1c2688e6cee3a79445 -> Connected: false
+Checking User: p1 | ID: cd6d7b8e90ca3f1c2688e6cee3a79445 | Token: Yes
+Attempt 1 (Name): p1 -> Connected: true
+Checking User: p1 | ID: cd6d7b8e90ca3f1c2688e6cee3a79445 | Token: Yes
+Attempt 1 (Name): p1 -> Connected: true
+Checking User: p1 | ID: cd6d7b8e90ca3f1c2688e6cee3a79445 | Token: Yes
+Attempt 1 (Name): p1 -> Connected: true

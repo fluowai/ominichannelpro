@@ -1,0 +1,2 @@
+[CONNECT_ROUTE] 2026-01-17T23:24:15.563Z Error: {"code":401,"error":"unauthorized","success":false}
+[CONNECT_ROUTE] 2026-01-17T23:24:30.767Z Error: {"code":401,"error":"unauthorized","success":false}

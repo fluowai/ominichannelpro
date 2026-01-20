@@ -1,0 +1,55 @@
+{
+  "name": "fluow-ai-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Fluow AI - Omnichannel AI Agent Management",
+  "main": "dist/server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio"
+  },
+  "keywords": [
+    "ai",
+    "chatbot",
+    "whatsapp",
+    "instagram",
+    "evolution-api"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@fastify/cors": "^10.0.1",
+    "@fastify/jwt": "^9.0.1",
+    "@fastify/multipart": "^9.0.1",
+    "@fastify/static": "^9.0.0",
+    "@fastify/websocket": "^11.0.1",
+    "@google/generative-ai": "^0.24.1",
+    "@prisma/client": "^5.22.0",
+    "@types/node-cron": "^3.0.11",
+    "@types/pg": "^8.16.0",
+    "@types/ws": "^8.18.1",
+    "axios": "^1.8.0",
+    "bcryptjs": "^2.4.3",
+    "bullmq": "^5.35.3",
+    "dotenv": "^16.4.7",
+    "fastify": "^5.2.0",
+    "instagram-private-api": "^1.46.1",
+    "ioredis": "^5.4.2",
+    "node-cron": "^4.2.1",
+    "pg": "^8.17.1",
+    "ws": "^8.19.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^22.14.0",
+    "prisma": "^5.22.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.8.2"
+  }
+}

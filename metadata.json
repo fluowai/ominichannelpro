@@ -1,0 +1,8 @@
+{
+  "name": "Fluow AI - Gestão de Agentes de IA",
+  "description": "Sistema completo para gestão de agentes de IA omnichannel integrando WhatsApp (Evolution API), Instagram e múltiplos LLMs (Gemini, OpenAI, Groq).",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
