@@ -24,6 +24,7 @@ const start = async () => {
     await fastify.register(cors, {
       origin: '*', 
       credentials: false,
+      allowedHeaders: ['Content-Type', 'Authorization', 'ngrok-skip-browser-warning'],
     });
 
     // 2. ERROR HANDLER
@@ -110,7 +111,7 @@ const start = async () => {
     // 10. SERVER START
     const port = parseInt(process.env.PORT || '3333');
     await fastify.listen({ port, host: '0.0.0.0' });
-    console.log(`🚀 Server running at http://localhost:${port}`);
+    console.log(`🚀 Server running on port ${port}`);
 
     // 11. BACKGROUND SERVICES (Start only after server is up)
     try {
