@@ -1,7 +1,28 @@
 /// <reference types="vite/client" />
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:3333/api';
+// 🚀 Resilient API URL Logic
+// 1. Check if VITE_API_URL is set (usually via .env)
+// 2. If not, and we are in dev mode, use '/api' to leverage Vite's proxy
+// 3. If in production (like Vercel), we try to infer it or fallback to the local default
+const getBaseURL = () => {
+  const envUrl = import.meta.env.VITE_API_URL;
+  if (envUrl) return envUrl;
+  
+  // If we are on localhost but using a specific domain, we might need a fallback
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    return 'http://127.0.0.1:3333/api';
+  }
+  
+  // For deployed environments, a relative path is safest if the backend is on the same domain
+  // or if we have a proxy. Otherwise, the user MUST set VITE_API_URL.
+  return '/api';
+};
+
+const API_URL = getBaseURL();
+
+console.log(`[API Config] Base URL set to: ${API_URL}`);
+console.log(`[API Config] Current Origin: ${window.location.origin}`);
 
 export const api = axios.create({
   baseURL: API_URL,
