@@ -1,8 +1,14 @@
 # Usar uma imagem Node.js leve
 FROM node:20-alpine
 
+# Instalar OpenSSL (necessário para o Prisma no Alpine)
+RUN apk -U add openssl
+
 # Definir diretório de trabalho
 WORKDIR /app
+
+# Criar diretório de uploads (necessário para o fastify-static)
+RUN mkdir -p uploads
 
 # Copiar arquivos de dependência
 COPY package*.json ./
