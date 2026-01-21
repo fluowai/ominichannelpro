@@ -262,7 +262,10 @@ export const useChatStore = create<ChatState>((set, get) => ({
         const urlObj = new URL(safeUrl);
         
         wsHost = urlObj.host; // domain:port
-        wsProtocol = safeUrl.startsWith('https') ? 'wss' : 'ws';
+        
+        // FIX: Force WSS if on HTTPS (Mixed Content Prevention)
+        const isSecure = window.location.protocol === 'https:' || safeUrl.startsWith('https');
+        wsProtocol = isSecure ? 'wss' : 'ws';
     } catch (e) {
         console.error('[WS] Failed to parse API URL, falling back to localhost', e);
         wsHost = 'localhost:3333';

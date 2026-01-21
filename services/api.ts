@@ -10,10 +10,17 @@ const getBaseURL = () => {
   let envUrl = import.meta.env.VITE_API_URL?.trim(); // FIX: Trim spaces
   
   if (envUrl) {
-    // FIX: Auto-add https if missing (common user error)
+    // FIX 1: Auto-add https if missing (common user error)
     if (!envUrl.startsWith('http')) {
       envUrl = `https://${envUrl}`;
     }
+    
+    // FIX 2: Force HTTPS if we are on HTTPS (Prevent Mixed Content Error)
+    if (window.location.protocol === 'https:' && envUrl.startsWith('http:')) {
+      console.log('[API] Upgrading insecure URL to HTTPS to prevent Mixed Content');
+      envUrl = envUrl.replace('http:', 'https:');
+    }
+    
     return envUrl;
   }
   
