@@ -288,9 +288,17 @@ export const useChatStore = create<ChatState>((set, get) => ({
       set({ 
           reconnectAttempts: 0,
           isConnecting: false,
-          socket: newSocket // Set socket only on success open to be safe? No, we need it for cleanup.
+          socket: newSocket,
+          isConnected: true
       }); 
       
+      // Heartbeat
+      (newSocket as any).pingInterval = setInterval(() => {
+         if (newSocket.readyState === WebSocket.OPEN) {
+             newSocket.send('ping');
+         }
+      }, 30000);
+
       // SYNC ON CONNECT
       get().fetchConversations();
       const { activeConversationId, selectConversation } = get();
@@ -300,8 +308,8 @@ export const useChatStore = create<ChatState>((set, get) => ({
     };
 
     newSocket.onerror = (error) => {
-      console.error('[WS_DEBUG] WebSocket error:', error);
-      set({ isConnecting: false });
+      console.error('[WS_DEBUG] WebSocket error event:', error);
+      // Do not set isConnecting false here, let onClose handle it
     };
 
     newSocket.onclose = (event) => {
