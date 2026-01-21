@@ -27,8 +27,8 @@ const start = async () => {
     await fastify.register(cors, {
       origin: '*', 
       credentials: false, 
-      allowedHeaders: ['Content-Type', 'Authorization', 'x-requested-with'],
-      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS']
+      allowedHeaders: '*', // ALLOW EVERYTHING
+      methods: '*' // ALLOW EVERYTHING
     });
 
     // 2. ERROR HANDLER

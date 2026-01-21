@@ -7,7 +7,7 @@ import axios from 'axios';
 // 3. If in production (like Vercel), we try to infer it or fallback to the local default
 const getBaseURL = () => {
   // 1. Manually set environment variable (highest priority)
-  let envUrl = import.meta.env.VITE_API_URL;
+  let envUrl = import.meta.env.VITE_API_URL?.trim(); // FIX: Trim spaces
   
   if (envUrl) {
     // FIX: Auto-add https if missing (common user error)
