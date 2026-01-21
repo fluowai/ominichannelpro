@@ -21,36 +21,13 @@ const fastify = Fastify({
 const start = async () => {
   try {
     // 1. CORS
-    // 1. CORS
+    // 1. CORS - REFLECT ORIGIN (Maximum Compatibility)
+    // origin: true tells Fastify to set Access-Control-Allow-Origin to the exact value of the request's Origin header.
+    // This works perfectly with credentials: true.
     await fastify.register(cors, {
-      origin: (origin, cb) => {
-        const hostname = new URL(origin || 'http://localhost').hostname;
-        // Allow requests with no origin (like mobile apps or curl requests)
-        if (!origin) {
-          return cb(null, true);
-        }
-        
-        // Allow localhost
-        if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
-          return cb(null, true);
-        }
-        
-        // Allow Vercel & Railway
-        if (origin.endsWith('.vercel.app') || origin.endsWith('.railway.app')) {
-          return cb(null, true);
-        }
-
-        // Check explicit list from ENV
-        const allowed = process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : [];
-        if (allowed.includes(origin)) {
-          return cb(null, true);
-        }
-
-        console.log(`[CORS] Blocked origin: ${origin}`);
-        cb(null, false);
-      },
+      origin: true,
       credentials: true,
-      allowedHeaders: ['Content-Type', 'Authorization', 'ngrok-skip-browser-warning'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'ngrok-skip-browser-warning', 'x-requested-with'],
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS']
     });
 
