@@ -17,8 +17,8 @@ COPY . .
 # Gerar o Prisma Client
 RUN npx prisma generate
 
-# Compilar o projeto (se necessário)
-RUN npm run build
+# Compilar o projeto (não necessário pois usamos tsx)
+# RUN npm run build
 
 # Definir porta padrão (Railway injeta PORT)
 ENV PORT=3333
