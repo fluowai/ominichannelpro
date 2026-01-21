@@ -21,13 +21,13 @@ const fastify = Fastify({
 const start = async () => {
   try {
     // 1. CORS
-    // 1. CORS - REFLECT ORIGIN (Maximum Compatibility)
-    // origin: true tells Fastify to set Access-Control-Allow-Origin to the exact value of the request's Origin header.
-    // This works perfectly with credentials: true.
+    // 1. CORS - ALLOW ALL (Fix for Network Error)
+    // Since we use Bearer Tokens (not cookies), we can safely allow all origins.
+    // This solves issues where Vercel/Railway proxies might strip/alter the Origin header.
     await fastify.register(cors, {
-      origin: true,
-      credentials: true,
-      allowedHeaders: ['Content-Type', 'Authorization', 'ngrok-skip-browser-warning', 'x-requested-with'],
+      origin: '*', 
+      credentials: false, 
+      allowedHeaders: ['Content-Type', 'Authorization', 'x-requested-with'],
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS']
     });
 

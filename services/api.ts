@@ -23,7 +23,9 @@ const getBaseURL = () => {
   return '/api';
 };
 
-const API_URL = getBaseURL().replace(/\/$/, ''); // Remove trailing slash if present
+// Sanitization and Enforcement
+const cleanUrl = getBaseURL().replace(/\/$/, ''); // Remove trailing slash first
+const API_URL = cleanUrl.endsWith('/api') ? cleanUrl : `${cleanUrl}/api`;
 
 console.log(`[API Config] Base URL set to: ${API_URL}`);
 console.log(`[API Config] Current Origin: ${window.location.origin}`);
@@ -32,7 +34,6 @@ export const api = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
-    'ngrok-skip-browser-warning': 'true', // OBRIGATÓRIO para funcionar com ngrok gratuito no Vercel
   },
 });
 
