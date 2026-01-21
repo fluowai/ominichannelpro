@@ -1,6 +1,6 @@
 
 import { create } from 'zustand';
-import { conversationsAPI } from '../services/api';
+import { conversationsAPI, api } from '../services/api';
 import toast from 'react-hot-toast';
 
 export interface Message {
@@ -252,16 +252,22 @@ export const useChatStore = create<ChatState>((set, get) => ({
     // DYNAMIC WS URL: Adapts to dev (ws://) or prod (wss://)
     const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3333';
     
-    // Robust hostname extraction (ignores /api suffix)
+    // Parse hostname from the corrected/raw URL
     let wsHost;
+    let wsProtocol = 'ws'; // Default local
+
     try {
-        const urlObj = new URL(apiUrl);
+        // Handle case where user provided URL without protocol (e.g. "myapp.railway.app")
+        const safeUrl = apiUrl.startsWith('http') ? apiUrl : `https://${apiUrl}`;
+        const urlObj = new URL(safeUrl);
+        
         wsHost = urlObj.host; // domain:port
+        wsProtocol = safeUrl.startsWith('https') ? 'wss' : 'ws';
     } catch (e) {
+        console.error('[WS] Failed to parse API URL, falling back to localhost', e);
         wsHost = 'localhost:3333';
     }
 
-    const wsProtocol = apiUrl.startsWith('https') ? 'wss' : 'ws';
     const wsUrl = `${wsProtocol}://${wsHost}/ws/chat?token=${token}&userId=${userId}`;
     console.log('[WS_DEBUG] Attempting connection to:', wsUrl.split('?')[0]); 
     

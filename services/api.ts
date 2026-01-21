@@ -7,19 +7,22 @@ import axios from 'axios';
 // 3. If in production (like Vercel), we try to infer it or fallback to the local default
 const getBaseURL = () => {
   // 1. Manually set environment variable (highest priority)
-  const envUrl = import.meta.env.VITE_API_URL;
-  if (envUrl) return envUrl;
+  let envUrl = import.meta.env.VITE_API_URL;
+  
+  if (envUrl) {
+    // FIX: Auto-add https if missing (common user error)
+    if (!envUrl.startsWith('http')) {
+      envUrl = `https://${envUrl}`;
+    }
+    return envUrl;
+  }
   
   // 2. Local Environment Logic
   if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    // We use relative path to leverage Vite's proxy (defined in vite.config.ts)
-    // This avoids CORS issues and correctly routes to http://localhost:3333
     return '/api';
   }
   
-  // 3. Production/Deployed Logic (Vercel, etc.)
-  // If we are on Vercel and NO VITE_API_URL is set, relative '/api' will fail 
-  // with a 404 unless we have vercel.json rewrites or a local backend.
+  // 3. Production Fallback
   return '/api';
 };
 
