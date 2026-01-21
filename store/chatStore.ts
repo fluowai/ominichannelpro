@@ -249,9 +249,14 @@ export const useChatStore = create<ChatState>((set, get) => ({
     // LOCK
     set({ isConnecting: true });
 
-    // DIRECT WS URL: Bypassing proxy and using IPv4 to avoid resolution issues
-    const wsUrl = `ws://127.0.0.1:3333/ws/chat?token=${token}&userId=${userId}`;
-    console.log('[WS_DEBUG] Attempting connection to:', wsUrl.split('?')[0]); // Log path only for safety
+    // DYNAMIC WS URL: Adapts to dev (ws://) or prod (wss://)
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3333';
+    const wsProtocol = apiUrl.startsWith('https') ? 'wss' : 'ws';
+    // Remove 'http://' or 'https://' from URL to get just the domain/host
+    const wsHost = apiUrl.replace(/^https?:\/\//, '');
+    
+    const wsUrl = `${wsProtocol}://${wsHost}/ws/chat?token=${token}&userId=${userId}`;
+    console.log('[WS_DEBUG] Attempting connection to:', wsUrl.split('?')[0]); 
     
     let newSocket: WebSocket;
     try {
