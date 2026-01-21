@@ -251,10 +251,17 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
     // DYNAMIC WS URL: Adapts to dev (ws://) or prod (wss://)
     const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3333';
-    const wsProtocol = apiUrl.startsWith('https') ? 'wss' : 'ws';
-    // Remove 'http://' or 'https://' from URL to get just the domain/host
-    const wsHost = apiUrl.replace(/^https?:\/\//, '');
     
+    // Robust hostname extraction (ignores /api suffix)
+    let wsHost;
+    try {
+        const urlObj = new URL(apiUrl);
+        wsHost = urlObj.host; // domain:port
+    } catch (e) {
+        wsHost = 'localhost:3333';
+    }
+
+    const wsProtocol = apiUrl.startsWith('https') ? 'wss' : 'ws';
     const wsUrl = `${wsProtocol}://${wsHost}/ws/chat?token=${token}&userId=${userId}`;
     console.log('[WS_DEBUG] Attempting connection to:', wsUrl.split('?')[0]); 
     

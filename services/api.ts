@@ -23,7 +23,7 @@ const getBaseURL = () => {
   return '/api';
 };
 
-const API_URL = getBaseURL();
+const API_URL = getBaseURL().replace(/\/$/, ''); // Remove trailing slash if present
 
 console.log(`[API Config] Base URL set to: ${API_URL}`);
 console.log(`[API Config] Current Origin: ${window.location.origin}`);
