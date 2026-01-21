@@ -33,6 +33,8 @@ async function checkIntegrations() {
       console.log(`Agent: ${integration.agent?.name || 'N/A'}`);
       
       console.log(`Config: ${JSON.stringify(config, null, 2)}`);
+    }
+
     console.log('\n--- SYSTEM SETTINGS ---');
     const settings = await prisma.systemSettings.findMany();
     console.log(JSON.stringify(settings, null, 2));
